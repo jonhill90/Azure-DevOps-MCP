@@ -1,0 +1,23 @@
+# Git
+.git
+.gitignore
+
+# Environment
+.env
+.env.example
+
+# Documentation
+README.md
+*.md
+
+# Node
+node_modules
+npm-debug.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode
+.idea

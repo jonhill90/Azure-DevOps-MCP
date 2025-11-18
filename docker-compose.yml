@@ -1,0 +1,48 @@
+# Azure DevOps MCP Server
+# Pattern: vibes-network with Alpine base and HTTP/SSE streaming
+
+services:
+  azure-devops-mcp:
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    container_name: azure-devops-mcp
+
+    ports:
+      - "${ADO_MCP_PORT:-8055}:8000"
+
+    environment:
+      - ADO_ORGANIZATION=${ADO_ORGANIZATION}
+      - ADO_PAT=${ADO_PAT}
+      - ADO_AUTH_TYPE=${ADO_AUTH_TYPE:-envvar}
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+      # Set the Azure DevOps PAT for the MCP server
+      - AZURE_DEVOPS_EXT_PAT=${ADO_PAT}  # For 'env' auth type
+      - ADO_MCP_AUTH_TOKEN=${ADO_PAT}     # For 'envvar' auth type
+
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1G
+          pids: 200
+
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
+    healthcheck:
+      test: ["CMD", "sh", "-c", "ps aux | grep -v grep | grep -q 'node'"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+    networks:
+      - vibes-network
+
+    restart: unless-stopped
+
+networks:
+  vibes-network:
+    external: true

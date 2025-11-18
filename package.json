@@ -1,0 +1,14 @@
+{
+  "name": "azure-devops-mcp-wrapper",
+  "version": "1.0.0",
+  "description": "HTTP/SSE wrapper for Azure DevOps MCP Server",
+  "type": "module",
+  "main": "src/http-wrapper.js",
+  "scripts": {
+    "start": "./start.sh",
+    "build": "echo 'No build needed - using wrapper script'"
+  },
+  "dependencies": {},
+  "author": "Jon",
+  "license": "MIT"
+}
