@@ -70,9 +70,34 @@ docker-compose logs -f
 curl http://localhost:8055/health
 ```
 
-## Usage with Claude Desktop (Recommended)
+## Usage with Claude Desktop
+
+### Option 1: HTTP/SSE Transport (Recommended for Production)
 
 Add to `~/Library/Application Support/Claude/claude_desktop_config.json`:
+
+```json
+{
+  "mcpServers": {
+    "azure-devops": {
+      "command": "npx",
+      "args": [
+        "mcp-remote",
+        "http://localhost:8055/mcp"
+      ]
+    }
+  }
+}
+```
+
+**Advantages:**
+- Works with MCP gateways (LiteLLM, Microsoft MCP Gateway)
+- Ready for K8s deployment with HTTPS
+- Better for production environments
+
+### Option 2: Docker stdio (Local Development)
+
+For direct stdio access without HTTP layer:
 
 ```json
 {
@@ -94,7 +119,25 @@ After updating the config:
 
 ## Usage with Claude Code
 
-### Option 1: Docker stdio (Recommended)
+### Option 1: HTTP/SSE Transport (Recommended)
+
+Add to your Claude Code MCP settings:
+
+```json
+{
+  "mcpServers": {
+    "azure-devops": {
+      "command": "npx",
+      "args": [
+        "mcp-remote",
+        "http://localhost:8055/mcp"
+      ]
+    }
+  }
+}
+```
+
+### Option 2: Docker stdio
 
 Add to your Claude Code MCP settings:
 
@@ -109,20 +152,6 @@ Add to your Claude Code MCP settings:
 }
 ```
 
-### Option 2: HTTP/SSE Transport
-
-If your MCP client supports HTTP/SSE:
-
-```json
-{
-  "mcpServers": {
-    "azure-devops": {
-      "url": "http://localhost:8055/sse",
-      "transport": "sse"
-    }
-  }
-}
-```
 
 ## Available Tools
 
@@ -364,4 +393,3 @@ This wrapper is MIT licensed. The underlying `@azure-devops/mcp` package is lice
 ## Credits
 
 - Official MCP Server: [microsoft/azure-devops-mcp](https://github.com/microsoft/azure-devops-mcp)
-- Wrapper pattern inspired by [BasicMemory](https://github.com/basicmachines-co/basic-memory)
